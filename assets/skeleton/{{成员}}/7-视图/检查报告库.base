@@ -1,0 +1,119 @@
+# 检查报告库 · 报告 / 检查活动 的结构化视图（派生、可重生成）
+#
+# 数据来源：本库所有 md 的 frontmatter（Obsidian 属性），不读正文、不读 CSV。
+# 归档新单据时本文件无需改动 —— 视图是查询，不是清单：
+#   新增报告页只要照技能规定写好 frontmatter（类型 / 项目 / 日期 / 机构 / 检查活动 / 数值已入表 / 异常项），
+#   视图自动跟上。改动口径见技能 references/bases-views.md。
+#
+# 取数：obsidian base:query path="〈成员〉/7-视图/检查报告库.base" view="<视图名>" format=csv|md|json
+
+filters:
+  and:
+    - 'file.hasTag("检查报告")'
+
+properties:
+  类型:
+    displayName: 类型
+  项目:
+    displayName: 项目
+  日期:
+    displayName: 日期
+  机构:
+    displayName: 机构
+  活动:
+    displayName: 活动
+  来源类型:
+    displayName: 来源
+  报告数:
+    displayName: 报告数
+  异常项:
+    displayName: 异常项
+  数值已入表:
+    displayName: 数值已入表
+
+views:
+  # 单报告页：一次检查里的一条项目
+  - type: table
+    name: 报告页清单
+    filters:
+      and:
+        - '类型 != "检查活动"'
+    sort:
+      - property: 日期
+        direction: DESC
+    order:
+      - file.name
+      - 日期
+      - 类型
+      - 项目
+      - 机构
+      - 异常项
+      - 数值已入表
+
+  # 汇总页：一次检查活动（一次体检 / 一次就诊开的整套检查）
+  - type: table
+    name: 检查活动汇总页
+    filters:
+      and:
+        - '类型 == "检查活动"'
+    sort:
+      - property: 日期
+        direction: DESC
+    order:
+      - 日期
+      - 活动
+      - 来源类型
+      - 机构
+      - 报告数
+      - 异常项
+      - file.name
+
+  # 换个项目名即得该项目的近 10 次（一张单据含多个项目时用 + 连接，故用 contains 而非 ==）
+  - type: table
+    name: 近10次血常规
+    limit: 10
+    filters:
+      and:
+        - '项目.contains("血常规")'
+    sort:
+      - property: 日期
+        direction: DESC
+    order:
+      - 日期
+      - 机构
+      - 异常项
+      - 检查活动
+      - file.name
+
+  # 图像型 / 描述型：没有数值可入表，只能看原图与结论
+  - type: table
+    name: 影像与功能检查
+    filters:
+      or:
+        - '类型 == "影像"'
+        - '类型 == "功能检查"'
+    sort:
+      - property: 日期
+        direction: DESC
+    order:
+      - 日期
+      - 类型
+      - 项目
+      - 机构
+      - file.name
+
+  # 数值未入表 = 该页只有原图与结论，指标总表里查不到
+  - type: table
+    name: 数值未入表清单
+    filters:
+      and:
+        - '数值已入表 == false'
+    sort:
+      - property: 日期
+        direction: DESC
+    order:
+      - 日期
+      - 类型
+      - 项目
+      - 机构
+      - 检查活动
