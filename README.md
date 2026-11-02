@@ -5,6 +5,8 @@
 **把体检报告、化验单、就医记录、用药史，整理成一套可检索、可追溯、可带走的个人病历库。**
 **Turn lab reports, visit notes and medication history into a personal medical archive — searchable, traceable, portable.**
 
+**中文搜索关键词**：电子病历库 · 病历管理 · 健康档案 · 体检报告整理 · 化验单归档 · 就医记录 · 用药记录 · Obsidian · AI Agent
+
 Obsidian 当底座 · 任何能读 Markdown 的 AI agent 当执行者 · 纯本地、零云端
 Obsidian as the substrate · any Markdown-reading AI agent as the operator · local-only, zero cloud
 
